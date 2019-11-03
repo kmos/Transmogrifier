@@ -14,6 +14,7 @@ import java.net.Socket;
  * twitter: nmosf
  */
 public class SingleThreadedBlockingServer {
+
   public static void main(String[] args) throws IOException {
     ServerSocket ss = new ServerSocket(8080);
     while (true) {
@@ -42,6 +43,5 @@ public class SingleThreadedBlockingServer {
   private static int transmogrify(int data) {
     return Character.isLetter(data) ? data ^ ' ' : data;
   }
-
 
 }
