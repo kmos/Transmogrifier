@@ -24,9 +24,9 @@ public class SingleThreadedBlockingServer {
   }
 
   private static void handle(Socket s) throws IOException {
+    System.out.println("Connected to " + s);
     try (
-      // Java 7 version
-      Socket temp = s;
+      s; // Java 9 version
       InputStream in = s.getInputStream();
       OutputStream out = s.getOutputStream()
     ) {
@@ -34,6 +34,8 @@ public class SingleThreadedBlockingServer {
       while ((data = in.read()) != 1) {
         out.write(transmogrify(data));
       }
+    } finally {
+      System.out.println("Disconnected from " + s);
     }
   }
 
