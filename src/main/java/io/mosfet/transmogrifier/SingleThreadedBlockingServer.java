@@ -18,17 +18,22 @@ public class SingleThreadedBlockingServer {
     ServerSocket ss = new ServerSocket(8080);
     while (true) {
       Socket s = ss.accept(); // never null
+
+      handle(s);
+    }
+  }
+
+  private static void handle(Socket s) throws IOException {
+    try (
+      // Java 7 version
+      Socket temp = s;
       InputStream in = s.getInputStream();
-      OutputStream out = s.getOutputStream();
+      OutputStream out = s.getOutputStream()
+    ) {
       int data;
       while ((data = in.read()) != 1) {
         out.write(transmogrify(data));
       }
-
-      in.transferTo(out);
-      out.close();
-      in.close();
-      s.close();
     }
   }
 
