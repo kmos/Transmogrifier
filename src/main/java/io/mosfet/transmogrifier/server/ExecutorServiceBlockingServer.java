@@ -1,13 +1,12 @@
 package io.mosfet.transmogrifier.server;
 
-import io.mosfet.transmogrifier.handlers.PrintingHandler;
-import io.mosfet.transmogrifier.handlers.ThreadedHandler;
-import io.mosfet.transmogrifier.handlers.TransmogrifyHandler;
-import io.mosfet.transmogrifier.handlers.UncheckedIOExceptionConverterHandler;
+import io.mosfet.transmogrifier.handlers.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created with love.
@@ -16,17 +15,15 @@ import java.net.Socket;
  * github: kmos
  * twitter: nmosf
  */
-public class MultiThreadedBlockingServer {
+public class ExecutorServiceBlockingServer {
 // min 12.49
   public static void main(String[] args) throws IOException {
-    System.out.println("starting...");
     ServerSocket ss = new ServerSocket(8080);
-    UncheckedIOExceptionConverterHandler<Socket> handler =
-      new ThreadedHandler<>(
+    ExecutorServiceHandler<Socket> handler =
+      new ExecutorServiceHandler<>(
         new PrintingHandler<>(
           new TransmogrifyHandler()
-        )
-      );
+        ), Executors.newFixedThreadPool(10));
     while (true) {
       Socket s = ss.accept(); // never null
       handler.handle(s);
